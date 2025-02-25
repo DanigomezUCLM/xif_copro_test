@@ -1,0 +1,69 @@
+CAPI=2:
+
+# Copyright 2025 EPFL
+# Solderpad Hardware License, Version 2.1, see LICENSE for details.
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+#
+# Author: David Mallasén <david.mallasen@epfl.ch>
+# Description: XIF coprocessor fusesoc description file
+
+name: "esl-epfl:ip:xif_copro:0.0.1"
+description: "CV-X-IF compatible example coprocessor that implements a bit reversal instruction."
+
+filesets:
+  rtl:
+    files:
+      - hw/xif_copro/xif_copro_pkg.sv
+      - hw/xif_copro/xif_copro_predecoder_pkg.sv
+      - hw/xif_copro/xif_copro_instr_pkg.sv
+      - hw/xif_copro/xif_copro_alu.sv
+      - hw/xif_copro/xif_copro_controller.sv
+      - hw/xif_copro/xif_copro_decoder.sv
+      - hw/xif_copro/xif_copro_ex_stage.sv
+      - hw/xif_copro/xif_copro_predecoder.sv
+      - hw/xif_copro/xif_copro_regfile.sv
+      - hw/xif_copro/xif_copro.sv
+    file_type: systemVerilogSource
+
+  dependent_rtl:
+    files:
+      - hw/common/fifo_v3.sv
+      - hw/common/stream_fifo.sv
+      - hw/if_xif.sv
+    file_type: systemVerilogSource
+
+  tb:
+    files:
+      - tb/xif_copro_testharness.sv
+    file_type: systemVerilogSource
+
+targets:
+  default: &default
+    filesets:
+      - rtl
+    toplevel:
+      - xif_copro
+
+  sim:
+    <<: *default
+    default_tool: modelsim
+    filesets_append:
+      - dependent_rtl
+      - tb
+    toplevel:
+      - xif_copro_testharness
+    tools:
+      modelsim:
+        vlog_options:
+          - -svinputport=net
+          - -pedanticerrors
+
+  synth:
+    <<: *default
+    default_tool: vivado
+    description: TUL Pynq-Z2 Board
+    filesets_append:
+      - dependent_rtl
+    tools:
+      vivado:
+        part: xc7z020clg400-1
