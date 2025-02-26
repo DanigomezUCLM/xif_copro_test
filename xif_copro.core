@@ -16,7 +16,6 @@ filesets:
       - hw/xif_copro/xif_copro_pkg.sv
       - hw/xif_copro/xif_copro_predecoder_pkg.sv
       - hw/xif_copro/xif_copro_instr_pkg.sv
-      - hw/xif_copro/xif_copro_alu.sv
       - hw/xif_copro/xif_copro_controller.sv
       - hw/xif_copro/xif_copro_decoder.sv
       - hw/xif_copro/xif_copro_ex_stage.sv
@@ -64,6 +63,8 @@ targets:
     description: TUL Pynq-Z2 Board
     filesets_append:
       - dependent_rtl
+    toplevel:
+      - xif_copro_testharness
     tools:
       vivado:
         part: xc7z020clg400-1

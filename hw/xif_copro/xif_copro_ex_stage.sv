@@ -119,7 +119,7 @@ module xif_copro_ex_stage #(
     if (~rst_ni) begin
       operand_a <= '0;
       operand_b <= '0;
-      operator  <= NONE;
+      operator  <= xif_copro_pkg::NONE;
       tag_o     <= '0;
     end else if (input_hs) begin
       operand_a <= operand_a_i;
@@ -129,7 +129,7 @@ module xif_copro_ex_stage #(
     end else if (output_hs) begin
       operand_a <= '0;
       operand_b <= '0;
-      operator  <= NONE;
+      operator  <= xif_copro_pkg::NONE;
       tag_o     <= '0;
     end
   end

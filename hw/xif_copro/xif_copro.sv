@@ -265,7 +265,7 @@ module xif_copro #(
     .copreg_we_o(copreg_we),
 
     // Dependency Check and Forwarding
-    .rd_in_is_pos_i(decoded_data.rd_is_copro),
+    .rd_in_is_copro_i(decoded_data.rd_is_copro),
     .rs1_i(copreg_raddr[0]),
     .rs2_i(copreg_raddr[1]),
     .ex_fwd_o(ex_fwd),
@@ -366,9 +366,9 @@ module xif_copro #(
           end
         end
         xif_copro_pkg::RegA, xif_copro_pkg::RegB: begin
-          if (ex_fwd[i] & (decoded_data.copro_op != prau_pkg::NONE)) begin
+          if (ex_fwd[i] & (decoded_data.copro_op != xif_copro_pkg::NONE)) begin
             operands[i] = data_result;
-          end else if (lsu_fwd[i] & (decoded_data.copro_op != prau_pkg::NONE)) begin
+          end else if (lsu_fwd[i] & (decoded_data.copro_op != xif_copro_pkg::NONE)) begin
             operands[i] = xif_mem_result_if.mem_result.rdata;
           end else begin
             operands[i] = {{XLEN - xif_copro_pkg::X_RFR_WIDTH{1'b0}}, copreg_operands[i]};

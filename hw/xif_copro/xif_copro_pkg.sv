@@ -36,6 +36,15 @@ package xif_copro_pkg;
     CPU    // Operand comes from the CPU
   } op_select_e;
 
+  // Update this when adding new operations to copro_op_e
+  localparam int unsigned NUM_COPRO_OPERATIONS = 2;
+  localparam int unsigned COPRO_OPERATION_BITS = $clog2(NUM_COPRO_OPERATIONS);
+
+  typedef enum logic [COPRO_OPERATION_BITS-1:0] {
+    NONE,   // No operation
+    BITREV  // Bit reverse
+  } copro_op_e;
+
   // ====================
   // Predecoder
   // ====================
@@ -102,15 +111,6 @@ package xif_copro_pkg;
     logic [4:0]            addr;  // Destination register rd
     logic                  rd_is_copro;
   } copro_tag_t;
-
-  // Update this when adding new operations to copro_op_e
-  localparam int unsigned NUM_COPRO_OPERATIONS = 2;
-  localparam int unsigned COPRO_OPERATION_BITS = $clog2(NUM_COPRO_OPERATIONS);
-
-  typedef enum logic [COPRO_OPERATION_BITS-1:0] {
-    NONE, // No operation
-    BITREV, // Bit reverse
-  } copro_op_e;
 
   // ====================
   // Result
