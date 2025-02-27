@@ -33,8 +33,10 @@ static inline uint32_t xbitrev(uint32_t val) {
 }
 
 int main() {
-    uint32_t x = 0b10110000;
-    uint32_t reversed = xbitrev(x);
+    volatile uint32_t x = 0b10110000;
+    volatile uint32_t reversed;
+
+    reversed = xbitrev(x);
 
     printf("Input:    0x%08X\n", x);
     printf("Reversed: 0x%08X\n", reversed);
