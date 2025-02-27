@@ -51,8 +51,6 @@ module xif_copro_controller #(
   input  logic       rd_in_is_copro_i,
   input  logic [4:0] rs1_i,
   input  logic [4:0] rs2_i,
-  output logic       dep_rs_o,
-  output logic       dep_rd_o,
   output logic                      [xif_copro_pkg::X_NUM_RS-1:0] ex_fwd_o,
   output logic                      [xif_copro_pkg::X_NUM_RS-1:0] lsu_fwd_o,
   input  xif_copro_pkg::op_select_e [xif_copro_pkg::X_NUM_RS-1:0] op_select_i,
@@ -71,7 +69,9 @@ module xif_copro_controller #(
   output logic mem_push_valid_o,
   input  logic mem_push_ready_i,
   output logic mem_pop_ready_o,
+  /* verilator lint_off UNUSED */
   input  xif_copro_pkg::mem_metadata_t mem_pop_data_i,
+  /* verilator lint_on UNUSED */
 
   // Memory Result Interface
   input  logic xif_mem_result_valid_i,
@@ -95,6 +95,8 @@ module xif_copro_controller #(
   logic [xif_copro_pkg::X_NUM_RS-1:0] valid_operands;
   logic dep_rs1;
   logic dep_rs2;
+  logic dep_rs;
+  logic dep_rd;
 
   // Handshakes
   logic ex_in_hs;
@@ -145,15 +147,15 @@ module xif_copro_controller #(
   // Dependency Check and Forwarding
   // ===============================
 
-  assign dep_rs1   = rd_scoreboard_q[rs1_i] & in_buf_pop_valid_i
-                   & (op_select_i[0] == xif_copro_pkg::RegA);
-  assign dep_rs2   = rd_scoreboard_q[rs2_i] & in_buf_pop_valid_i
-                   & (op_select_i[1] == xif_copro_pkg::RegB);
-  assign dep_rs_o  = (dep_rs1   & ~(ex_fwd_o[0] | lsu_fwd_o[0]))
-                   | (dep_rs2   & ~(ex_fwd_o[1] | lsu_fwd_o[1]));
-  assign dep_rd_o  = rd_scoreboard_q[rd_i] & rd_in_is_copro_i
-                   & ~((ex_out_hs | xif_mem_result_valid_i)
-                   & copreg_we_o & (copreg_wb_addr_i == rd_i));
+  assign dep_rs1 = rd_scoreboard_q[rs1_i] & in_buf_pop_valid_i
+                 & (op_select_i[0] == xif_copro_pkg::RegA);
+  assign dep_rs2 = rd_scoreboard_q[rs2_i] & in_buf_pop_valid_i
+                 & (op_select_i[1] == xif_copro_pkg::RegB);
+  assign dep_rs  = (dep_rs1   & ~(ex_fwd_o[0] | lsu_fwd_o[0]))
+                 | (dep_rs2   & ~(ex_fwd_o[1] | lsu_fwd_o[1]));
+  assign dep_rd  = rd_scoreboard_q[rd_i] & rd_in_is_copro_i
+                 & ~((ex_out_hs | xif_mem_result_valid_i)
+                 & copreg_we_o & (copreg_wb_addr_i == rd_i));
 
   always_comb begin
     ex_fwd_o[0] = 1'b0;
@@ -185,7 +187,7 @@ module xif_copro_controller #(
 
   always_comb begin
     xif_mem_valid_o = 1'b0;
-    if ((is_load_i | is_store_i) & ~dep_rs_o & ~dep_rd_o & in_buf_pop_valid_i & mem_push_ready_i
+    if ((is_load_i | is_store_i) & ~dep_rs & ~dep_rd & in_buf_pop_valid_i & mem_push_ready_i
         & (commit_scoreboard_q[xif_mem_req_id_i] | commit_scoreboard_d[xif_mem_req_id_i])) begin
       xif_mem_valid_o = 1'b1;
     end
@@ -219,7 +221,7 @@ module xif_copro_controller #(
 
   assign ex_in_valid_o = use_copro_i & in_buf_pop_valid_i
                           & (commit_scoreboard_q[ex_in_id_i] | commit_scoreboard_d[ex_in_id_i])
-                          & ~dep_rs_o & ~dep_rd_o
+                          & ~dep_rs & ~dep_rd
                           & (ex_out_valid_i | ~instr_inflight);
 
   // ================

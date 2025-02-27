@@ -42,7 +42,7 @@ module xif_copro_regfile #(
   logic [     NUM_WORDS-1:0][DATA_WIDTH-1:0] mem;
   logic [NR_WRITE_PORTS-1:0][ NUM_WORDS-1:0] we_dec;
 
-
+  /* verilator lint_off WIDTH */
   always_comb begin : we_decoder
     for (int unsigned j = 0; j < NR_WRITE_PORTS; j++) begin
       for (int unsigned i = 0; i < NUM_WORDS; i++) begin
@@ -51,6 +51,7 @@ module xif_copro_regfile #(
       end
     end
   end
+  /* verilator lint_on WIDTH */
 
   always_ff @(posedge clk_i, negedge rst_ni) begin : register_write_behavioral
     if (~rst_ni) begin

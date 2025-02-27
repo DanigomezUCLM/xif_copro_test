@@ -44,7 +44,9 @@ module xif_copro_ex_stage #(
 
   // Register signals
   logic [XLEN-1:0] operand_a;
+  /* verilator lint_off UNUSED */
   logic [XLEN-1:0] operand_b;
+  /* verilator lint_on UNUSED */
   xif_copro_pkg::copro_op_e operator;
 
   // Handshake signals
@@ -63,7 +65,7 @@ module xif_copro_ex_stage #(
       xif_copro_pkg::BITREV: begin
         bitrev_result = '0;
         for (int i = 0; i < XLEN; i++) begin
-          bitrev_result[i] = operand_a_i[XLEN - 1 - i];
+          bitrev_result[i] = operand_a[XLEN - 1 - i];
         end
       end
       default: begin

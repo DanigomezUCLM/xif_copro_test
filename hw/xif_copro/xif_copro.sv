@@ -48,9 +48,7 @@ module xif_copro #(
   xif_copro_pkg::offloaded_data_t in_buf_push_data;
   xif_copro_pkg::offloaded_data_t in_buf_pop_data;
 
-  // Forwarding and dependency check
-  logic dep_rs;
-  logic dep_rd;
+  // Forwarding
   logic [xif_copro_pkg::X_NUM_RS-1:0] ex_fwd;
   logic [xif_copro_pkg::X_NUM_RS-1:0] lsu_fwd;
 
@@ -271,8 +269,6 @@ module xif_copro #(
     .ex_fwd_o(ex_fwd),
     .lsu_fwd_o(lsu_fwd),
     .op_select_i(decoded_data.op_select),
-    .dep_rs_o(dep_rs),
-    .dep_rd_o(dep_rd),
 
     // Memory Instruction
     .is_load_i(decoded_data.is_load),
