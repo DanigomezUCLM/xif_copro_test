@@ -32,14 +32,49 @@ static inline uint32_t xbitrev(uint32_t val) {
     return result;
 }
 
+/**
+ *  Changes the zero to %2 (rs2) to allow for a shift amount to be passed in.
+ */
+static inline uint32_t xrotright(uint32_t val, uint32_t shift) {
+    uint32_t result;
+    asm volatile (
+       ".insn r 0x2B, 0x7, 0x03, %0, %1, %2" // Custom encoding for ROTRIGHT
+       : "=r"(result) // Output operand (rd)
+       : "r"(val), "r"(shift)
+       // Input operand (rs1)
+     );
+    return result;
+}
+
+static inline uint32_t xrotleft(uint32_t val, uint32_t shift) {
+    uint32_t result;
+    asm volatile (
+        ".insn r 0x2B, 0x7, 0x04, %0, %1, %2" // Custom encoding for ROTLEFT
+        : "=r"(result) // Output operand (rd)
+        : "r"(val), "r"(shift)
+        // Input operand (rs1)
+        );
+    return result;
+}
+
 int main() {
     volatile uint32_t x = 0b10110000;
     volatile uint32_t reversed;
+    volatile uint32_t data_to_rotate = 0xC0002003;
+    volatile uint32_t shift = 4; 
+    volatile uint32_t rotated_right;
+    volatile uint32_t rotated_left;
+
+    rotated_right = xrotleft(data_to_rotate,shift);
+    rotated_left = xrotright(data_to_rotate,shift);
 
     reversed = xbitrev(x);
 
-    printf("Input:    0x%08X\n", x);
-    printf("Reversed: 0x%08X\n", reversed);
+    printf("Test REVERSE\n");
+    printf("Input:    0x%08X\n Reversed: 0x%08X\n",x, reversed);
+
+    printf("Test ROTATE\n");
+    printf("Input: 0x%08X\nRIGHT: 0x%08X\nLEFT:  0x%08X\n",data_to_rotate,rotated_right, rotated_left);
 
     return 0;
 }

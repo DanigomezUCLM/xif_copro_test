@@ -92,7 +92,7 @@ module xif_copro_ex_stage #(
     endcase
   end
 
-   // =====================
+  // =====================
   // Rotate Left operation
   // =====================
 

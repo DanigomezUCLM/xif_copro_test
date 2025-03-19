@@ -21,10 +21,10 @@ package xif_copro_instr_pkg;
   // Bit reversal operation
   localparam logic [31:0] BITREV = 32'b 00000_10_?????_?????_111_?????_0101011;
 
-  // Rotate right operation FUNCT7 = 2
+  // Rotate right operation FUNCT7 = 3
   localparam logic [31:0] ROTRIGHT = 32'b 00000_11_?????_?????_111_?????_0101011;
 
-  // Rotate left operation FUNCT7 = 3
+  // Rotate left operation FUNCT7 = 4
   localparam logic [31:0] ROTLEFT = 32'b 00001_00_?????_?????_111_?????_0101011;
 
 endpackage  // xif_copro_instr_pkg

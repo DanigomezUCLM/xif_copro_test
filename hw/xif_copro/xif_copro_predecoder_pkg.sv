@@ -40,7 +40,7 @@ package xif_copro_predecoder_pkg;
           prd_rsp : '{accept : 1'b1, loadstore : 1'b0, writeback : 1'b0, use_gprs : 2'b10}
       },
       '{
-          instr: 32'b00000_11_00000_00000_111_00000_0101011,  // ROTLEFT
+          instr: 32'b00001_00_00000_00000_111_00000_0101011,  // ROTLEFT
           instr_mask: 32'b11111_11_00000_00000_111_00000_1111111,
           prd_rsp : '{accept : 1'b1, loadstore : 1'b0, writeback : 1'b0, use_gprs : 2'b10}
       }
