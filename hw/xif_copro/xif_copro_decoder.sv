@@ -43,6 +43,16 @@ module xif_copro_decoder (
         decoder_o.op_select[0] = xif_copro_pkg::CPU;
       end
 
+      xif_copro_instr_pkg::ROTRIGHT: begin
+        decoder_o.copro_op = xif_copro_pkg::ROTRIGHT;
+        decoder_o.op_select[0] = xif_copro_pkg::CPU;
+      end
+
+      xif_copro_instr_pkg::ROTLEFT: begin
+        decoder_o.copro_op = xif_copro_pkg::ROTLEFT;
+        decoder_o.op_select[0] = xif_copro_pkg::CPU;
+      end
+
       default: begin
         decoder_o.use_copro = 1'b0;
       end

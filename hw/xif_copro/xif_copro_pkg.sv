@@ -37,12 +37,14 @@ package xif_copro_pkg;
   } op_select_e;
 
   // Update this when adding new operations to copro_op_e
-  localparam int unsigned NUM_COPRO_OPERATIONS = 2;
+  localparam int unsigned NUM_COPRO_OPERATIONS = 4;
   localparam int unsigned COPRO_OPERATION_BITS = $clog2(NUM_COPRO_OPERATIONS);
 
   typedef enum logic [COPRO_OPERATION_BITS-1:0] {
     NONE,   // No operation
-    BITREV  // Bit reverse
+    BITREV,  // Bit reverse
+    ROTRIGHT,  // Rotate right
+    ROTLEFT // Rotate left
   } copro_op_e;
 
   // ====================

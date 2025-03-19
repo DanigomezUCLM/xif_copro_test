@@ -42,6 +42,9 @@ module xif_copro_ex_stage #(
   // Data signals
   logic [XLEN-1:0] bitrev_result;
 
+  logic [XLEN-1:0] rotleft_result;
+  logic [XLEN-1:0] rotright_result;
+
   // Register signals
   logic [XLEN-1:0] operand_a;
   /* verilator lint_off UNUSED */
@@ -74,6 +77,36 @@ module xif_copro_ex_stage #(
     endcase
   end
 
+  // =====================
+  // Rotate Right operation
+  // =====================
+
+  always_comb begin
+    case (operator)
+      xif_copro_pkg::ROTRIGHT: begin
+        rotright_result = (operand_a >> operand_b) | (operand_a << (XLEN - operand_b));
+      end
+      default: begin
+        rotright_result = '0;
+      end
+    endcase
+  end
+
+   // =====================
+  // Rotate Left operation
+  // =====================
+
+  always_comb begin
+    case (operator)
+      xif_copro_pkg::ROTLEFT: begin
+        rotleft_result = (operand_a << operand_b) | (operand_a >> (XLEN - operand_b));
+      end
+      default: begin
+        rotleft_result = '0;
+      end
+    endcase
+  end
+
   // =============
   // Result output
   // =============
@@ -84,6 +117,8 @@ module xif_copro_ex_stage #(
     unique case (operator)
       // Bit reverse result
       xif_copro_pkg::BITREV: result_o = bitrev_result;
+      xif_copro_pkg::ROTRIGHT: result_o = rotright_result;
+      xif_copro_pkg::ROTLEFT: result_o = rotleft_result;
       default: ;
     endcase
   end
